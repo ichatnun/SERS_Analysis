@@ -6,7 +6,7 @@ perform_hparam_tuning = False
 # The name of the folder that you want to save your results to. It would be great to make it self-explanatory.
 results_folder_name = 'results'
 save_html = True
-save_video = False
+save_video = True
 
 
 ############  Experimental details ############

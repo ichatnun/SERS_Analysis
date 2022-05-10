@@ -1,7 +1,7 @@
 import os
 
 # Perform hyper-parameter tuning. Otherwise, use the default parameter.
-perform_hparam_tuning = True 
+perform_hparam_tuning = True
 
 # The name of the folder that you want to save your results to. It would be great to make it self-explanatory.
 results_folder_name = 'results'
@@ -15,11 +15,11 @@ save_video = False
 experiment_name = 'EXO1_pos' 
 
 # Options: 'intra', 'inter', 'by-folders'. If 'by-folders' is specified, the users must organize data as /experiment/class/train/*.txt, /experiment/class/val/*.txt, /experiment/class/test/*.txt
-data_split_method = 'by-folders' 
+data_split_method = 'intra'
 
 # Options: # 'pca', 'pc-lda', 'rf', 'pc-rf', 'lda-rf', 'svm', 'pc-svm', 'lda-svm'
 # ML_method_list = ['rf','pc-rf','lda-rf','pc-svm','lda-svm'] 
-ML_method_list =['pca','pc-lda','rf','pc-rf','lda-rf','svm','pc-svm','lda-svm']
+ML_method_list =['pca','pc-lda','lda-rf','lda-svm']
 
 # Apply a baseline removal algorithm or not
 REMOVE_BASELINE = True
@@ -66,7 +66,7 @@ largest_PC_for_visualization = 6
 # Example: pca_display_list = [[1,2,3], [1,2,4]]
 # 1st plot = (PC1,PC2,PC3), 2nd plot (PC1,PC2, PC4),...
 # If its length is zero, run all
-pca_display_list = [[1,2,3], [1,2,4]]
+pca_display_list = [[1,2,3], [1,2]]
 # pca_display_list = []
 
 

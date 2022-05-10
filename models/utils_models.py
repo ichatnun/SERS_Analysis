@@ -6,6 +6,7 @@ import os, pdb
 import plotly.express as px
 import plotly.graph_objects as go
 from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.animation as animation
 
 from config import current_config as config
 
@@ -298,6 +299,31 @@ def plotScatterMatplotlib(df,
     plt.legend()
     plt.savefig(fname=results_outfile_path_no_extension\
                 +'_matplotlib.jpg',dpi=150)
+    
+    if save_video and (num_dim==3):
+        
+        plt.rc('animation', html='html5')
+        fig = plt.gcf()
+        def init():
+            return fig,
+
+        def animate(i):
+            ax.view_init(elev=10, azim=4*i)
+            return fig,
+
+        anim = animation.FuncAnimation(fig, 
+                                       animate, 
+                                       init_func=init,
+                                       frames=90, 
+                                       interval=20, 
+                                       blit=True)
+        
+        print('\t\tExport the .gif file')
+        anim.save(results_outfile_path_no_extension+'.gif',
+                  writer='imagemagick',fps=20, dpi=150)
+        print('\t\tDone: Export the .gif file') 
+        
+        
     plt.clf()
     plt.close()
     
