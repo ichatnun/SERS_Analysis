@@ -240,7 +240,12 @@ def extractAllSpectra(data_base_dir,
                 temp_df = pd.read_csv(preloaded_raman_shifts_filepath)
                 curr_wavenumbers = temp_df['shifts'].values
                 del temp_df
-                if not (np.asarray(desired_wavenumbers) == np.asarray(curr_wavenumbers)).all():
+                
+                if desired_wavenumbers.shape[0] != curr_wavenumbers.shape[0]:
+                    print('The preloaded wavenumbers are not the same as the desired ones. Overwrite the preloaded data.')
+                    files_already_exist = False
+                    
+                elif not (desired_wavenumbers == curr_wavenumbers).all():
                     print('The preloaded wavenumbers are not the same as the desired ones. Overwrite the preloaded data.')
                     files_already_exist = False
             

@@ -28,6 +28,8 @@ def performPCLDA_with_plot(x_train, y_train, x_test, y_test, params=None):
     
     # Determine the combinations that we want to visualize
     max_comp = min(config.largest_LDA_component_for_visualization,x_test.shape[1])
+
+    # if max_comp >= 3:
     if len(config.lda_display_list) == 0:
         
         desired_component_number_list = []
