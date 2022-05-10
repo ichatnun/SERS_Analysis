@@ -19,7 +19,7 @@ data_split_method = 'intra'
 
 # Options: # 'pca', 'pc-lda', 'rf', 'pc-rf', 'lda-rf', 'svm', 'pc-svm', 'lda-svm'
 # ML_method_list = ['rf','pc-rf','lda-rf','pc-svm','lda-svm'] 
-ML_method_list =['pca','pc-lda','pc-rf','lda-rf','pc-svm','lda-svm']
+ML_method_list =['pca','pc-lda','lda-rf','lda-svm']
 
 # Apply a baseline removal algorithm or not
 REMOVE_BASELINE = False
@@ -31,7 +31,7 @@ OVERWRITE_PRELOADED_DATA = False
 
 
 ############ Additional params for the 'intra' case ############
-num_repetitions_intra = 1 # (For 'inter', the program will perform leave-one-file-out analysis)
+num_repetitions_intra = 3 # (For 'inter', the program will perform leave-one-file-out analysis)
 fraction_test_intra = 1.0/3 # Fraction of spectra used for testing in the 'intra' case
 
 
@@ -66,7 +66,7 @@ largest_PC_for_visualization = 6
 # Example: pca_display_list = [[1,2,3], [1,2,4]]
 # 1st plot = (PC1,PC2,PC3), 2nd plot (PC1,PC2, PC4),...
 # If its length is zero, run all
-pca_display_list = [[1,2,3], [1,2,4]]
+pca_display_list = [[1,2,3], [1,2]]
 # pca_display_list = []
 
 

@@ -4,9 +4,45 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os, pdb
 import plotly.express as px
+import plotly.graph_objects as go
+from mpl_toolkits.mplot3d import Axes3D
 
 from config import current_config as config
 
+def getDisplayList(max_comp,display_list):
+    
+    max_dim_plot = min(3,max_comp)
+    
+    # Automatically generate the lda_display_list
+    if len(display_list) == 0:
+        if max_dim_plot == 3:
+            desired_component_number_list = []
+            for idx1 in range(max_comp):
+                for idx2 in np.arange(idx1+1,max_comp):
+                    for idx3 in np.arange(idx2+1,max_comp):
+                        desired_component_number_list.append([idx1+1,
+                                                              idx2+1,
+                                                              idx3+1])
+                        
+        elif max_dim_plot == 2:
+            desired_component_number_list = []
+            for idx1 in range(max_comp):
+                for idx2 in np.arange(idx1+1,max_comp):
+                        desired_component_number_list.append([idx1+1,
+                                                              idx2+1])
+                        
+        elif max_dim_plot == 1:
+            desired_component_number_list = []
+            for idx1 in range(max_comp):
+                desired_component_number_list.append([idx1+1])
+            
+    else:
+        desired_component_number_list = display_list
+        
+    return desired_component_number_list
+
+
+        
 def performPCA(x_train, x_test):
     from sklearn.decomposition import PCA
     
@@ -100,8 +136,7 @@ def plotAndSaveConfusionMatrix(y_true, y_predicted, class_list,results_path):
     
 def getInlierFlag(df):
     
-    
-    for idx_dim in range(3):
+    for idx_dim in range(df.shape[1]):
         curr_values = df.iloc[:,idx_dim]
         
         curr_flag_inliers_lb = np.percentile(curr_values, config.percentile_low) <= curr_values
@@ -116,53 +151,155 @@ def getInlierFlag(df):
             flag_inliers = flag_inliers&curr_flag_inliers
         
     return flag_inliers
-
-
-# df: samples x 3 dimensions
-def plotScatter3D(df, 
-                  col_name_for_x, 
-                  col_name_for_y, 
-                  col_name_for_z,
-                  method_name,
-                  results_outfile_path_no_extension,
-                  save_html=False, 
-                  save_video=False,
-                  params=None):
-    
-
-        # Remove outliers just for visualization
-        if config.remove_outlier_visualization:
-            curr_df = df[[col_name_for_x,col_name_for_y,col_name_for_z]]
-            
-            flag_inliers = getInlierFlag(curr_df)
-            df_inliers = df[flag_inliers]
-        else:
-            df_inliers = df
-            
-        # Prepare the x-axis, y-axis, and z-axis labels
-        if method_name == 'pca':
-            xaxis_label = col_name_for_x + "({a:2.2f}%)".format(a=params['explained_var'][0])
-            yaxis_label = col_name_for_y + "({a:2.2f}%)".format(a=params['explained_var'][1])
-            zaxis_label = col_name_for_z + "({a:2.2f}%)".format(a=params['explained_var'][2])
-        else:
-            xaxis_label = col_name_for_x
-            yaxis_label = col_name_for_y
-            zaxis_label = col_name_for_z
         
-        # Display the data
-        if save_html:
-            fig = px.scatter_3d(x=df_inliers[col_name_for_x],
-                        y=df_inliers[col_name_for_y],
-                        z=df_inliers[col_name_for_z],
-                        color=df_inliers['category'],
-                        color_discrete_map=config.color_dict)
 
-            fig.update_traces(marker=dict(size=5),
-                              selector=dict(mode='markers'))
+def plotScatterPlotly(df, 
+                      col_name_list,
+                      method_name,
+                      results_outfile_path_no_extension,
+                      save_html=True, 
+                      save_video=False,
+                      params=None):
 
-            fig.update_layout(scene = dict(
-                                xaxis_title=xaxis_label,
-                                yaxis_title=yaxis_label,
-                                zaxis_title=zaxis_label))
+    num_dim = len(col_name_list)
+    
+    # Remove outliers just for visualization
+    if config.remove_outlier_visualization:
+        curr_df = df[col_name_list]
 
-            fig.write_html(results_outfile_path_no_extension+'.html')
+        flag_inliers = getInlierFlag(curr_df)
+        df_inliers = df[flag_inliers]
+    else:
+        df_inliers = df
+
+    # Prepare the axis labels 
+    axis_labels = []
+    if method_name == 'pca':
+
+        for idx_axis in range(num_dim):
+            axis_labels.append(col_name_list[idx_axis] + "({a:2.2f}%)".format(a=params['explained_var'][idx_axis]))
+    else:
+        for idx_axis in range(num_dim):
+            axis_labels.append(col_name_list[idx_axis])
+
+    if num_dim == 3:
+        fig = px.scatter_3d(x=df_inliers[col_name_list[0]],
+            y=df_inliers[col_name_list[1]],
+            z=df_inliers[col_name_list[2]],
+            color=df_inliers['category'],
+            color_discrete_map=config.color_dict)
+        
+        fig.update_layout(scene = dict(
+                            xaxis_title=axis_labels[0],
+                            yaxis_title=axis_labels[1],
+                            zaxis_title=axis_labels[2]))
+    elif num_dim == 2:
+
+        fig = px.scatter(x=df_inliers[col_name_list[0]],
+                            y=df_inliers[col_name_list[1]],
+                            color=df_inliers['category'],
+                            color_discrete_map=config.color_dict)
+        fig.update_layout(scene = dict(
+                            xaxis_title=axis_labels[0],
+                            yaxis_title=axis_labels[1]))
+        
+    elif num_dim == 1:
+        fig = px.scatter(x=df_inliers[col_name_list[0]],
+                         y=[0]*df_inliers[col_name_list[0]].shape[0],
+                         color=df_inliers['category'],
+                         color_discrete_map=config.color_dict)
+        fig.update_layout(scene = dict(xaxis_title=axis_labels[0]))       
+    else:
+        return
+        
+    fig.update_traces(marker=dict(size=5),
+                  selector=dict(mode='markers')) 
+    
+    # Save the figure
+    fig.write_image(results_outfile_path_no_extension+'_plotly.jpg')
+    
+    # Display the data
+    if save_html:
+        fig.write_html(results_outfile_path_no_extension+'_plotly.html')
+             
+def plotScatterMatplotlib(df, 
+                          col_name_list,
+                          method_name,
+                          results_outfile_path_no_extension,
+                          save_video=False,
+                          params=None):
+
+    num_dim = len(col_name_list)
+    
+    # Remove outliers just for visualization
+    if config.remove_outlier_visualization:
+        curr_df = df[col_name_list]
+
+        flag_inliers = getInlierFlag(curr_df)
+        df_inliers = df[flag_inliers]
+    else:
+        df_inliers = df
+
+    # Prepare the axis labels 
+    axis_labels = []
+    if method_name == 'pca':
+
+        for idx_axis in range(num_dim):
+            axis_labels.append(col_name_list[idx_axis] + "({a:2.2f}%)".format(a=params['explained_var'][idx_axis]))
+    else:
+        for idx_axis in range(num_dim):
+            axis_labels.append(col_name_list[idx_axis])
+            
+    # color_name_for_all_samples = []
+    # for curr_class in df_inliers['category']:
+    #     color_name_for_all_samples.append(params['color_dict'][curr_class])
+            
+    if num_dim == 3:
+        
+        ax = Axes3D(plt.figure())
+        
+        for curr_class in params['class_list']:
+            curr_class_df = df_inliers[df_inliers['category']==curr_class]
+            
+            ax.scatter(curr_class_df[col_name_list[0]],
+                       curr_class_df[col_name_list[1]],
+                       curr_class_df[col_name_list[2]],
+                       c=params['color_dict'][curr_class],
+                       label=curr_class)
+        ax.set_xlabel(axis_labels[0])
+        ax.set_ylabel(axis_labels[1])
+        ax.set_zlabel(axis_labels[2])
+        
+    elif num_dim == 2:
+        ax = plt.axes()
+        for curr_class in params['class_list']:
+            curr_class_df = df_inliers[df_inliers['category']==curr_class]
+            
+            ax.scatter(curr_class_df[col_name_list[0]],
+                       curr_class_df[col_name_list[1]],
+                       c=params['color_dict'][curr_class],
+                       label=curr_class)
+        ax.set_xlabel(axis_labels[0])
+        ax.set_ylabel(axis_labels[1])
+
+        
+    elif num_dim == 1:
+        ax = plt.axes()
+        for curr_class in params['class_list']:
+            curr_class_df = df_inliers[df_inliers['category']==curr_class]
+            
+            ax.scatter(curr_class_df[col_name_list[0]],
+                       [0]*curr_class_df.shape[0],
+                       c=params['color_dict'][curr_class],
+                       label=curr_class)
+        ax.set_xlabel(axis_labels[0])
+    
+    plt.grid()
+    plt.legend()
+    plt.savefig(fname=results_outfile_path_no_extension\
+                +'_matplotlib.jpg',dpi=150)
+    plt.clf()
+    plt.close()
+    
+    
+    

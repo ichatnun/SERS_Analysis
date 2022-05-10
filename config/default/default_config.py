@@ -1,7 +1,7 @@
 import os
 
 # Perform hyper-parameter tuning. Otherwise, use the default parameter.
-perform_hparam_tuning = False 
+perform_hparam_tuning = True 
 
 # The name of the folder that you want to save your results to. It would be great to make it self-explanatory.
 results_folder_name = 'results'
@@ -22,7 +22,7 @@ data_split_method = 'by-folders'
 ML_method_list =['pca','pc-lda','rf','pc-rf','lda-rf','svm','pc-svm','lda-svm']
 
 # Apply a baseline removal algorithm or not
-REMOVE_BASELINE = False
+REMOVE_BASELINE = True
 
 # Default to False, unless you want to reload the data from raw files
 OVERWRITE_PRELOADED_DATA = False 

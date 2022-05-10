@@ -9,6 +9,8 @@ from sklearn.metrics import confusion_matrix
 from scipy import sparse
 from scipy.sparse.linalg import spsolve
 
+from config import current_config as config
+
 def get_class_names(curr_path):
     class_abs_path_list = create_dir_list_no_hidden_dir(curr_path)
     
@@ -136,12 +138,26 @@ def getCommonWavenumbers(data_base_dir, class_list):
     # Count number of files to read
     num_files_to_read = 0
     for curr_class in class_list:
-        curr_num_files_per_class = len(glob.glob(os.path.join(data_base_dir,curr_class,'*.txt')))
-        num_files_to_read += curr_num_files_per_class
+        
+        if config.data_split_method in ['inter','intra']:
+            curr_num_files_per_class = len(glob.glob(os.path.join(data_base_dir,curr_class,'*.txt')))
+            num_files_to_read += curr_num_files_per_class
+            
+        elif config.data_split_method in ['by-folders']:
+            curr_num_files_per_class_train = len(glob.glob(os.path.join(data_base_dir,'train',curr_class,'*.txt')))
+            curr_num_files_per_class_test = len(glob.glob(os.path.join(data_base_dir,'test',curr_class,'*.txt')))
+            num_files_to_read += (curr_num_files_per_class_train + curr_num_files_per_class_test)
     
     # Extract common wavenumbers
     for curr_class in class_list:
-        filename_list = sorted(glob.glob(os.path.join(data_base_dir,curr_class,'*.txt')))
+        
+        if config.data_split_method in ['inter','intra']:
+            filename_list = sorted(glob.glob(os.path.join(data_base_dir,curr_class,'*.txt')))
+            
+        elif config.data_split_method in ['by-folders']:
+            filename_list_train = sorted(glob.glob(os.path.join(data_base_dir,'train',curr_class,'*.txt')))
+            filename_list_test = sorted(glob.glob(os.path.join(data_base_dir,'test',curr_class,'*.txt')))
+            filename_list = filename_list_train + filename_list_test
         
         if len(filename_list) == 0:
             print(curr_class,'has no files. Exit the program')
@@ -234,23 +250,36 @@ def extractAllSpectra(data_base_dir,
             # Case: the preloaded files do not exist or we want to reload them
             files_already_exist = os.path.exists(preloaded_spectra_filepath) and os.path.exists(preloaded_raman_shifts_filepath)
             
+            # If the files exist, check if the raman shifts are the same as the desired ones. If not, treat them as "non-existing"
             if files_already_exist:
                 
                 # Check the wavenumbers
                 temp_df = pd.read_csv(preloaded_raman_shifts_filepath)
-                curr_wavenumbers = temp_df['shifts'].values
+                curr_wavenumbers = temp_df['shifts'].values 
                 del temp_df
                 
                 if desired_wavenumbers.shape[0] != curr_wavenumbers.shape[0]:
-                    print('The preloaded wavenumbers are not the same as the desired ones. Overwrite the preloaded data.')
+                    print('The preloaded number of raman shifts are not of the same length as the desired ones. Overwrite the preloaded data.')
                     files_already_exist = False
                     
-                elif not (desired_wavenumbers == curr_wavenumbers).all():
-                    print('The preloaded wavenumbers are not the same as the desired ones. Overwrite the preloaded data.')
+                elif not (np.isclose(curr_wavenumbers,desired_wavenumbers,0,0.0001).all()):
+                    print('The preloaded raman shifts are not the same as the desired ones. Overwrite the preloaded data.')
                     files_already_exist = False
             
-            if (not files_already_exist) or OVERWRITE_PRELOADED_DATA:
+            
+            if files_already_exist and (not OVERWRITE_PRELOADED_DATA):
+                # Files exist, but not overwrite
+                print(preloaded_spectra_filepath, 'already exists, so just load it.')
+                f_file = open(preloaded_spectra_filepath, 'rb')
+                curr_spectra = pickle.load(f_file)
+                f_file.close()
                 
+                temp_df = pd.read_csv(preloaded_raman_shifts_filepath)
+                curr_wavenumbers = temp_df['shifts'].values
+                del temp_df
+                
+            else: 
+                # Files exist but want to overwrite or files don't exist
                 if files_already_exist:
                     print(preloaded_spectra_filepath, 'already exists, but the user wants to reload and overwrite it.')
                 
@@ -268,20 +297,7 @@ def extractAllSpectra(data_base_dir,
 
                 df_out = pd.DataFrame(curr_wavenumbers, columns=['shifts'])
                 df_out.to_csv(preloaded_raman_shifts_filepath, index=False, index_label='shifts')
-                del df_out
-                
-                
-            # Case: Load the preloaded files  
-            else:
-                print(preloaded_spectra_filepath, 'already exists, so just load it.')
-                f_file = open(preloaded_spectra_filepath, 'rb')
-                curr_spectra = pickle.load(f_file)
-                f_file.close()
-                
-                temp_df = pd.read_csv(preloaded_raman_shifts_filepath)
-                curr_wavenumbers = temp_df['shifts'].values
-                del temp_df
-                
+                del df_out                
                 
             # Check the wavenumbers; They should all be the same
             all_wavenumbers.add(tuple(curr_wavenumbers))
