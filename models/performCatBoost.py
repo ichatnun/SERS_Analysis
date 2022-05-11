@@ -15,14 +15,14 @@ def performCatBoost(x_train, y_train, x_test, y_test, preproc_type=None, params=
     # Train the model
     clf = CatBoostClassifier(iterations=500,
                              depth=4,
-                             loss_function='Logloss',
+                             loss_function='MultiClass',
                              verbose=True)
 
     # Train the model
     clf.fit(x_train,y_train)
 
     # Test the model
-    y_test_predicted = clf.predict(x_test)
+    y_test_predicted = np.squeeze(clf.predict(x_test))
         
         
     ## Compute the accuracy
