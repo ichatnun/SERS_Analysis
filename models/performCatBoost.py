@@ -15,7 +15,7 @@ def performCatBoost(x_train, y_train, x_test, y_test, preproc_type=None, params=
     # Train the model
     clf = CatBoostClassifier(iterations=500,
                              depth=4,
-                             loss_function='Logloss',
+                             loss_function='MultiClass',
                              verbose=True)
 
     # Train the model
