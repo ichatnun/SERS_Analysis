@@ -1,6 +1,6 @@
 # SERS_Analysis
 
----
+
 To run a new experiment
 ---
 1) Modify 'config/current_config.py'
@@ -8,7 +8,7 @@ To run a new experiment
 3) Run 'main.ipynb'. You may comment out the first cell if you have already installed all required packages.
 4) Investigate the results store under the result folder (the exact name of the result folder is also specified in 'config/current_config.py')
 5) (Opt) Execute $ ffmpeg -f gif -i infile.gif outfile.mp4 to convert .gif files to .mp4 files
----
+
 Important files
 ---
 - 'config/current_config.py': Store all parameters used to define experiments
@@ -19,7 +19,7 @@ Important files
       - 'by-folders', all the files in './data_manual_split/train/' are used as training data and the files in './data_manual_split/test/' are used as test data.
   -   If 'experiment_name' is a string (not a list of strings) and is a valid experiment, it will perform the experiment. Otherwise, it will run all the experiments  under the data directory where each subfolder is treated as a valid experiment.
 
----
+
 How to organize the data folder
 ---
 If you set 'data_split_method' to 'intra' or 'inter', organize 'data_auto_split' as follows:
@@ -135,6 +135,17 @@ If you set 'data_split_method' to 'by-folders', organize 'data_manual_split' as 
       - ...
       - last_file.txt
 
+
+Note
 ---
+- Hyperparameter tuning is not currently available for CatBoost and LGBM.
+- Supported ML method options are
+  - pca
+  - pc-lda
+  - svm, pc-svm, lda-svm
+  - rf, pc-rf, lda-rf
+  - catboost, pc-catboost, lda-catboost
+  - lgbm, pc-lgbm, lda-lgbm
+
 Main server: NAI's Bob
 ---
