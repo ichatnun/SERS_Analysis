@@ -1,3 +1,5 @@
+from models.performLGBM import performLGBM
+from models.performCatBoost import performCatBoost
 from models.performRF import performRF
 from models.performSVM import performSVM
 from models.performPCA_with_plot import performPCA_with_plot
@@ -47,5 +49,33 @@ def performAnalysis(method_name, params):
                          preproc_type='pc-lda', 
                          params=params)
     
+    if method_name == 'catboost':
+        return performCatBoost(x_train, y_train, x_test, y_test, 
+                         preproc_type=None, 
+                         params=params)
+
+    if method_name == 'pc-catboost':
+        return performCatBoost(x_train, y_train, x_test, y_test, 
+                         preproc_type='pca', 
+                         params=params)
     
+    if method_name == 'lda-catboost':
+        return performCatBoost(x_train, y_train, x_test, y_test, 
+                         preproc_type='pc-lda', 
+                         params=params)    
+    
+    if method_name == 'lgbm':
+        return performLGBM(x_train, y_train, x_test, y_test, 
+                         preproc_type=None, 
+                         params=params)
+
+    if method_name == 'pc-lgbm':
+        return performLGBM(x_train, y_train, x_test, y_test, 
+                         preproc_type='pca', 
+                         params=params)
+    
+    if method_name == 'lda-lgbm':
+        return performLGBM(x_train, y_train, x_test, y_test, 
+                         preproc_type='pc-lda', 
+                         params=params)    
     

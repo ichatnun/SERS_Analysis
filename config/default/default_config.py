@@ -1,7 +1,7 @@
 import os
 
 # Perform hyper-parameter tuning. Otherwise, use the default parameter.
-perform_hparam_tuning = True
+perform_hparam_tuning = True 
 
 # The name of the folder that you want to save your results to. It would be great to make it self-explanatory.
 results_folder_name = 'results'
@@ -12,14 +12,17 @@ save_video = False
 ############  Experimental details ############
 
 # If not exist, perform the analysis on all experiments
-experiment_name = 'EXO1_pos' 
+experiment_name = 'EXO1' 
 
 # Options: 'intra', 'inter', 'by-folders'. If 'by-folders' is specified, the users must organize data as /experiment/class/train/*.txt, /experiment/class/val/*.txt, /experiment/class/test/*.txt
 data_split_method = 'intra'
 
-# Options: # 'pca', 'pc-lda', 'rf', 'pc-rf', 'lda-rf', 'svm', 'pc-svm', 'lda-svm'
-# ML_method_list = ['rf','pc-rf','lda-rf','pc-svm','lda-svm'] 
-ML_method_list =['pca','pc-lda','lda-rf','lda-svm']
+# Options: # 'pca', 'pc-lda', 'rf', 'pc-rf', 'lda-rf', 'svm', 'pc-svm', 'lda-svm','catboost', 'pc-catboost', 'lda-catboost','lgbm', 'pc-lgbm', 'lda-lgbm'
+ML_method_list =['pca', 'pc-lda', 
+                 'rf', 'pc-rf', 'lda-rf', 
+                 'svm', 'pc-svm', 'lda-svm',
+                 'catboost', 'pc-catboost', 'lda-catboost',
+                 'lgbm', 'pc-lgbm', 'lda-lgbm']
 
 # Apply a baseline removal algorithm or not
 REMOVE_BASELINE = True
