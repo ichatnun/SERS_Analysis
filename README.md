@@ -138,3 +138,8 @@ If you set 'data_split_method' to 'by-folders', organize 'data_manual_split' as 
 ---
 Main server: NAI's Bob
 ---
+
+---
+Note
+---
+Hyperparameter tuning is not currently implemented for CatBoost and LGBM.
