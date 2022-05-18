@@ -318,10 +318,16 @@ def plotScatterMatplotlib(df,
                                        interval=20, 
                                        blit=True)
         
+        # print('\t\tExport the .gif file')
+        # anim.save(results_outfile_path_no_extension+'.gif',
+        #           writer='imagemagick',fps=20, dpi=150)
+        # print('\t\tDone: Export the .gif file') 
+        
         print('\t\tExport the .gif file')
-        anim.save(results_outfile_path_no_extension+'.gif',
-                  writer='imagemagick',fps=20, dpi=150)
-        print('\t\tDone: Export the .gif file') 
+        writermp4 = animation.FFMpegWriter(fps=20) 
+        anim.save(results_outfile_path_no_extension+'.mp4', 
+                  writer=writermp4, dpi=150)
+        print('\t\tDone: Export the .mp4 file') 
         
         
     plt.clf()
