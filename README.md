@@ -7,7 +7,16 @@ To run a new experiment
 2) Organize the data folder as demonstrated below.
 3) Run 'main.ipynb'. You may comment out the first cell if you have already installed all required packages.
 4) Investigate the results store under the result folder (the exact name of the result folder is also specified in 'config/current_config.py')
-5) (Opt) Execute $ ffmpeg -f gif -i infile.gif outfile.mp4 to convert .gif files to .mp4 files
+
+Prerequisite for exporting videos
+---
+Install ffmpeg 
+- <code> sudo apt install ffmpeg </code>
+  
+Then, install [ffmpeg-python](https://github.com/kkroening/ffmpeg-python)
+- <code> pip install ffmpeg-python </code>
+  
+
 
 Important files
 ---
