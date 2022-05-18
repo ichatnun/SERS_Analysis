@@ -1,21 +1,22 @@
 # SERS_Analysis
 
 
-To run a new experiment
+Running a new experiment
 ---
 1) Modify 'config/current_config.py'
 2) Organize the data folder as demonstrated below.
 3) Run 'main.ipynb'. You may comment out the first cell if you have already installed all required packages.
 4) Investigate the results store under the result folder (the exact name of the result folder is also specified in 'config/current_config.py')
 
-Prerequisite for exporting videos
+Exporting videos
 ---
 Install ffmpeg 
 - <code> sudo apt install ffmpeg </code>
   
 Then, install [ffmpeg-python](https://github.com/kkroening/ffmpeg-python)
 - <code> pip install ffmpeg-python </code>
-  
+
+Make changes to models/utils_models.py if you want to export a video with specific frame rate and resolution. Also, it is possible to export .gif files by uncommenting a few lines in models/utils_models.py.
 
 
 Important files
