@@ -164,3 +164,7 @@ To-do
 
 Main server: NAI's Bob
 ---
+
+License
+---
+This work is released under the MIT License.
