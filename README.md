@@ -148,7 +148,7 @@ If you set 'data_split_method' to 'by-folders', organize 'data_manual_split' as 
 
 Note
 ---
-- Hyperparameter tuning is not currently available for CatBoost and LGBM.
+- Hyperparameter tuning is not currently available for CatBoost and LGBM. Also, the default hyperparameter lists are not extensive, so the performance will be suboptimal. Feel free to modify the lists (./models/the_method_that_you_want_to_change).
 - Supported ML method options are
   - pca
   - pc-lda
@@ -157,5 +157,6 @@ Note
   - catboost, pc-catboost, lda-catboost
   - lgbm, pc-lgbm, lda-lgbm
 
+---
 Main server: NAI's Bob
 ---
