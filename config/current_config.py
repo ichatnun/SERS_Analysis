@@ -22,7 +22,8 @@ ML_method_list =['pca', 'pc-lda',
                  'rf', 'pc-rf', 'lda-rf', 
                  'svm', 'pc-svm', 'lda-svm',
                  'catboost', 'pc-catboost', 'lda-catboost',
-                 'lgbm', 'pc-lgbm', 'lda-lgbm']
+                 'lgbm', 'pc-lgbm', 'lda-lgbm',
+                 'logistic-reg','pc-logistic-reg','lda-logistic-reg']
 
 # Apply a baseline removal algorithm or not
 REMOVE_BASELINE = True

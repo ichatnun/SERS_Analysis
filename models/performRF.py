@@ -1,6 +1,6 @@
 from sklearn.ensemble import RandomForestClassifier
 from config import current_config as config
-from models.utils_models import reduceDim, computeClassifAccuracy, plotAndSaveConfusionMatrix
+from models.utils_models import reduceDim, computeEvalMetrics, plotAndSaveConfusionMatrix
     
     
 def performRF(x_train, y_train, x_test, y_test, preproc_type=None, params=None):
@@ -42,17 +42,18 @@ def performRF(x_train, y_train, x_test, y_test, preproc_type=None, params=None):
         
         # Test the model
         y_test_predicted = clf.predict(x_test)
-        
-        
-    ## Compute the accuracy
-    acc = computeClassifAccuracy(y_test, y_test_predicted)
-    
-    
-    plotAndSaveConfusionMatrix(y_test, 
-                               y_test_predicted, 
+
+    ## Compute evaluation metrics
+    eval_metrics_dict = computeEvalMetrics(y_test,
+                                           y_test_predicted,
+                                           params['class_list'],
+                                           params['results_path'])
+
+    plotAndSaveConfusionMatrix(y_test,
+                               y_test_predicted,
                                params['class_list'],
                                params['results_path'])
-    
-    return acc
+
+    return eval_metrics_dict
 
     

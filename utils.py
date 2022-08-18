@@ -413,3 +413,34 @@ def trainTestSplitting(data_split_method,
     return spectra_training, spectra_test, labels_training, labels_test
 
 
+def saveSingleEvaluationMetrics_AllMethods(metric,
+                                           metric_name,
+                                           num_repetitions,
+                                           ML_classif_method_list,
+                                           color_list_for_bar_plots,
+                                           results_path):
+
+    mean_metric = np.mean(metric, axis=0)
+    std_metric = np.std(metric, axis=0)
+    stats = np.concatenate((metric, np.expand_dims(mean_metric, axis=0)), axis=0)
+    stats = np.concatenate((stats, np.expand_dims(std_metric, axis=0)), axis=0)
+
+    df = pd.DataFrame(stats, columns=ML_classif_method_list)
+
+    df_index_temp = []
+    for idx_rep in range(num_repetitions):
+        df_index_temp.append('Rep ' + str(idx_rep + 1))
+    df_index_temp.append('Mean')
+    df_index_temp.append('Std')
+    df.index = df_index_temp
+
+    df.to_csv(os.path.join(results_path, metric_name+'_test_reps.csv'))
+
+    # Create and save the classification accuracy bar plot
+    plt.figure()
+    plt.bar(ML_classif_method_list, mean_metric, yerr=std_metric, color=color_list_for_bar_plots)
+    plt.xlabel('ML methods')
+    plt.ylabel('metric_name')
+    plt.grid()
+    plt.savefig(fname=os.path.join(results_path, metric_name+'_test_bar_plot.jpg'), dpi=300, bbox_inches='tight')
+    plt.show()

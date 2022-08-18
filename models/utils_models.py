@@ -1,4 +1,4 @@
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, classification_report
 from matplotlib.pyplot import plot, draw, show, ion
 import matplotlib.pyplot as plt
 import numpy as np
@@ -86,11 +86,22 @@ def reduceDim(x_train, y_train, x_test, preproc_type, params):
     else:
         return x_train, x_test
     
-    
-def computeClassifAccuracy(y_true, y_predicted):
-     return np.sum(y_predicted==y_true)/y_true.shape[0]*100
-    
-    
+
+# https://scikit-learn.org/stable/modules/generated/sklearn.metrics.classification_report.html
+# Note that in binary classification, recall of the positive class is also known as “sensitivity”;
+# recall of the negative class is “specificity”.
+# https://scikit-learn.org/stable/modules/model_evaluation.html#precision-recall-f-measure-metrics
+def computeEvalMetrics(y_true, y_predicted, class_list, results_path):
+
+    classif_report_txt = classification_report(y_true, y_predicted, target_names=class_list)
+
+    with open(os.path.join(results_path, 'eval_metric.txt'), 'w') as f:
+        f.write(classif_report_txt)
+
+    eval_metrics_dict = classification_report(y_true, y_predicted, target_names=class_list, output_dict=True)
+
+    return eval_metrics_dict
+
 # Print and plot a confusion matrix
 # Taken from http://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html#sphx-glr-auto-examples-model-selection-plot-confusion-matrix-py
 def plot_confusion_matrix(cm, classes,

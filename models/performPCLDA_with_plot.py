@@ -4,7 +4,7 @@ import pandas as pd
 import plotly.express as px
 
 from config import current_config as config
-from models.utils_models import reduceDim, plotScatterPlotly, computeClassifAccuracy, plotAndSaveConfusionMatrix, getDisplayList, plotScatterMatplotlib
+from models.utils_models import reduceDim, plotScatterPlotly, computeEvalMetrics, plotAndSaveConfusionMatrix, getDisplayList, plotScatterMatplotlib
 
 def performPCLDA_with_plot(x_train, y_train, x_test, y_test, params=None):
 
@@ -62,15 +62,17 @@ def performPCLDA_with_plot(x_train, y_train, x_test, y_test, params=None):
                           results_outfile_path_no_extension=temp_outfile_path,
                           save_video=config.save_video,
                           params=params)
-        
-    ## Compute the accuracy
-    acc = computeClassifAccuracy(y_test, y_test_predicted)
-    
-    
-    plotAndSaveConfusionMatrix(y_test, 
-                               y_test_predicted, 
+
+    ## Compute evaluation metrics
+    eval_metrics_dict = computeEvalMetrics(y_test,
+                                           y_test_predicted,
+                                           params['class_list'],
+                                           params['results_path'])
+
+    plotAndSaveConfusionMatrix(y_test,
+                               y_test_predicted,
                                params['class_list'],
                                params['results_path'])
-    
-    return acc
-    
+
+    return eval_metrics_dict
+
