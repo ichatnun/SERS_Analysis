@@ -156,6 +156,7 @@ Note
   - rf, pc-rf, lda-rf
   - catboost, pc-catboost, lda-catboost
   - lgbm, pc-lgbm, lda-lgbm
+  - logistic-reg, pc-logistic-reg, lda-logistic-reg
 
 
 To-do
