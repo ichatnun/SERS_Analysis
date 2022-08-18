@@ -1,21 +1,22 @@
 # SERS_Analysis
 
 
-To run a new experiment
+Running a new experiment
 ---
 1) Modify 'config/current_config.py'
 2) Organize the data folder as demonstrated below.
 3) Run 'main.ipynb'. You may comment out the first cell if you have already installed all required packages.
 4) Investigate the results store under the result folder (the exact name of the result folder is also specified in 'config/current_config.py')
 
-Prerequisite for exporting videos
+Exporting videos
 ---
 Install ffmpeg 
 - <code> sudo apt install ffmpeg </code>
   
 Then, install [ffmpeg-python](https://github.com/kkroening/ffmpeg-python)
 - <code> pip install ffmpeg-python </code>
-  
+
+Make changes to models/utils_models.py if you want to export a video with specific frame rate and resolution. Also, it is possible to export .gif files by uncommenting a few lines in models/utils_models.py.
 
 
 Important files
@@ -147,7 +148,7 @@ If you set 'data_split_method' to 'by-folders', organize 'data_manual_split' as 
 
 Note
 ---
-- Hyperparameter tuning is not currently available for CatBoost and LGBM.
+- Hyperparameter tuning is not currently available for CatBoost and LGBM. Also, the default hyperparameter lists are not extensive, so the performance will be suboptimal. Feel free to modify the lists (For example, search for 'hparams' in './models/performRF.py' and modify it to include more parameters to sweep).
 - Supported ML method options are
   - pca
   - pc-lda
@@ -156,5 +157,14 @@ Note
   - catboost, pc-catboost, lda-catboost
   - lgbm, pc-lgbm, lda-lgbm
 
+
+To-do
+---
+- Implement more-than-one-chip cross-validation for interchip experiments
+
 Main server: NAI's Bob
 ---
+
+License
+---
+This work is released under the MIT License.
