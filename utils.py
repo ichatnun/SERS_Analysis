@@ -438,9 +438,11 @@ def saveSingleEvaluationMetrics_AllMethods(metric,
 
     # Create and save the classification accuracy bar plot
     plt.figure()
-    plt.bar(ML_classif_method_list, mean_metric, yerr=std_metric, color=color_list_for_bar_plots)
+    pos = range(len(ML_classif_method_list))
+    plt.bar(pos, mean_metric, yerr=std_metric, color=color_list_for_bar_plots)
+    plt.xticks(pos, ML_classif_method_list, rotation=90)
     plt.xlabel('ML methods')
-    plt.ylabel('metric_name')
+    plt.ylabel(metric_name)
     plt.grid()
     plt.savefig(fname=os.path.join(results_path, metric_name+'_test_bar_plot.jpg'), dpi=300, bbox_inches='tight')
     plt.show()
