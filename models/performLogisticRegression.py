@@ -11,7 +11,7 @@ def performLogisticRegression(x_train, y_train, x_test, y_test, preproc_type=Non
         x_train, x_test,_ = reduceDim(x_train, y_train, x_test, preproc_type, params)
 
     ## Train the model
-    clf = LogisticRegression()
+    clf = LogisticRegression(max_iter=500)
 
     # Train the model
     clf.fit(x_train,y_train)
