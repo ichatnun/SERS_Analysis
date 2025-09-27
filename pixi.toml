@@ -1,0 +1,25 @@
+[workspace]
+authors = ["Itthi Chatnuntawech <kanoon31@gmail.com>"]
+channels = ["conda-forge"]
+name = "SERS_Analysis"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+webcolors = ">=24.11.1,<25"
+plotly = "5.7.0.*"
+nbformat = ">=5.10.4,<6"
+tune-sklearn = ">=0.5.0,<0.6"
+packaging = ">=25.0,<26"
+ffmpeg-python = ">=0.2.0,<0.3"
+catboost = ">=1.2.8,<2"
+lightgbm = ">=4.6.0,<5"
+ipykernel = ">=6.30.1,<7"
+pixi-kernel = ">=0.6.7,<0.7"
+
+[pypi-dependencies]
+ray = { version = "*", extras = ["tune"] }
+kaleido = "==0.2.1" 
+baselineremoval = ">=0.1.6, <0.2"
