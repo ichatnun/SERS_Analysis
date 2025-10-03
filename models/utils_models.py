@@ -5,7 +5,6 @@ import numpy as np
 import os, pdb
 import plotly.express as px
 import plotly.graph_objects as go
-from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.animation as animation
 
 from config import current_config as config
@@ -268,7 +267,8 @@ def plotScatterMatplotlib(df,
             
     if num_dim == 3:
         
-        ax = Axes3D(plt.figure())
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
         
         for curr_class in params['class_list']:
             curr_class_df = df_inliers[df_inliers['category']==curr_class]
